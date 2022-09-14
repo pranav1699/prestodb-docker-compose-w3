@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  coordinator:
+    image: ahanaio/prestodb-sandbox
+    ports:
+      - "8080:8080"
+    container_name: "coordinator"
+    volumes:
+      - ./config.properties:/opt/presto-server/etc/config.properties
+      - ./postgres.properties:/opt/presto-server/etc/catalog/postgres.properties
+      - ./local_postgres.properties:/opt/presto-server/etc/catalog/local_postgres.properties
+    
+  worker:
+    image: ahanaio/prestodb-sandbox
+    container_name: "worker0"
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./worker/config.properties:/opt/presto-server/etc/config.properties
+    depends_on:
+      - coordinator
+  workerone:
+    image: ahanaio/prestodb-sandbox
+    container_name: "worker1"
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./worker1/config.properties:/opt/presto-server/etc/config.properties
+    depends_on:
+      - coordinator
+  workertwo:
+    image: ahanaio/prestodb-sandbox
+    container_name: "worker2"
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./worker3/config.properties:/opt/presto-server/etc/config.properties
+    depends_on:
+      - coordinator
